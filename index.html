@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Colorado Wing Civil Air Patrol Interest Form</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/config.js"></script>
+    <script src="/squadrons.js"></script>
+    <script src="/app.js" defer></script>
+    <script>
+      window.CAPResponseFormTurnstileLoaded = function () {
+        window.CAPResponseForm?.renderTurnstile?.();
+      };
+    </script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=CAPResponseFormTurnstileLoaded" async defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <img class="wing-logo" src="/assets/colorado-wing-logo.png" alt="Colorado Wing Civil Air Patrol logo">
+        <div class="header-content">
+          <p class="eyebrow">Civil Air Patrol Colorado Wing</p>
+          <h1>Membership Interest Form</h1>
+          <p class="header-copy">Share your contact information and we will route your request to the squadron you select.</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <aside class="info-panel" aria-label="Form summary">
+        <h2>Connect With A Squadron</h2>
+        <p>Select the squadron you are interested in and your request will go to that unit's recruiting distribution group.</p>
+      </aside>
+
+      <form id="interest-form" class="form-panel" novalidate>
+        <div class="form-grid">
+          <label>
+            <span>First Name</span>
+            <input name="firstName" autocomplete="given-name" required>
+            <small id="firstName-error" data-error-for="firstName"></small>
+          </label>
+
+          <label>
+            <span>Last Name</span>
+            <input name="lastName" autocomplete="family-name" required>
+            <small id="lastName-error" data-error-for="lastName"></small>
+          </label>
+
+          <label>
+            <span>Email Address</span>
+            <input name="email" type="email" autocomplete="email" required>
+            <small id="email-error" data-error-for="email"></small>
+          </label>
+
+          <label>
+            <span>Phone Number</span>
+            <input name="phone" type="tel" autocomplete="tel" required>
+            <small id="phone-error" data-error-for="phone"></small>
+          </label>
+        </div>
+
+        <label>
+          <span>Squadron Of Interest</span>
+          <select id="squadron" name="squadron" required>
+            <option value="">Select a squadron</option>
+          </select>
+          <small id="squadron-error" data-error-for="squadron"></small>
+        </label>
+
+        <label>
+          <span>Membership Type</span>
+          <select name="membershipType" required>
+            <option value="">Select a membership type</option>
+            <option value="Cadet">Cadet (youth 12-18)</option>
+            <option value="Adult">Adult (18+)</option>
+            <option value="Cadet Sponsor">Cadet Sponsor (parent/guardian)</option>
+            <option value="Patron">Patron (inactive supporter)</option>
+            <option value="Aerospace Education">Aerospace Education (educator/teacher)</option>
+          </select>
+          <small id="membershipType-error" data-error-for="membershipType"></small>
+        </label>
+
+        <section id="parent-section" class="parent-section" hidden>
+          <h2>Parent Or Guardian Contact</h2>
+          <div class="form-grid">
+            <label>
+              <span>Parent/Guardian Name</span>
+              <input name="parentName" autocomplete="name">
+              <small id="parentName-error" data-error-for="parentName"></small>
+            </label>
+
+            <label>
+              <span>Parent/Guardian Email</span>
+              <input name="parentEmail" type="email" autocomplete="email">
+              <small id="parentEmail-error" data-error-for="parentEmail"></small>
+            </label>
+
+            <label>
+              <span>Parent/Guardian Phone</span>
+              <input name="parentPhone" type="tel" autocomplete="tel">
+              <small id="parentPhone-error" data-error-for="parentPhone"></small>
+            </label>
+          </div>
+        </section>
+
+        <label>
+          <span>Message</span>
+          <textarea name="message" rows="5" placeholder="Leave a comment to help better assist you."></textarea>
+        </label>
+
+        <div class="turnstile-wrap">
+          <div class="cf-turnstile" data-size="compact"></div>
+        </div>
+
+        <button type="submit">Submit Interest Form</button>
+        <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+      </form>
+    </main>
+  </body>
+</html>

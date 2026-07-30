@@ -1,0 +1,13 @@
+{
+  "name": "cap-response-form",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.js api/tests/*.test.js",
+    "test:frontend": "node --test tests/*.test.js",
+    "test:api": "node --test api/tests/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

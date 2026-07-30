@@ -1,0 +1,16 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "TURNSTILE_SECRET_KEY": "1x0000000000000000000000000000000AA",
+    "GRAPH_TENANT_ID": "00000000-0000-0000-0000-000000000000",
+    "GRAPH_CLIENT_ID": "00000000-0000-0000-0000-000000000000",
+    "GRAPH_CLIENT_SECRET": "replace-with-graph-client-secret",
+    "GRAPH_SENDER_USER": "sender@example.org",
+    "EMAIL_COPY_ENABLED": "true",
+    "EMAIL_COPY_RECIPIENTS": "copy-recipient@example.org",
+    "EMAIL_OVERRIDE_ENABLED": "false",
+    "EMAIL_OVERRIDE_RECIPIENTS": "test-recipient@example.org"
+  }
+}
