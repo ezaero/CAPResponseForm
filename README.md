@@ -92,6 +92,45 @@ The repository includes a GitHub Actions workflow for Azure Static Web Apps. Pus
 
 Required deployment values should be stored as Azure Static Web Apps application settings or GitHub environment secrets, not in source control.
 
+## Submission Reporting
+
+The API logs one structured telemetry record after a form submission passes validation, passes Turnstile, and email delivery is accepted by Microsoft Graph. The log excludes applicant names, email addresses, phone numbers, and message text.
+
+The structured payload is logged with this event name:
+
+```text
+CAPResponseForm.SubmissionAccepted
+```
+
+Production deployments should configure an Application Insights resource and set `APPLICATIONINSIGHTS_CONNECTION_STRING` on the Static Web App API settings so Azure Functions logs are queryable in Azure Monitor.
+
+Use this KQL query in Application Insights Logs to report submissions by squadron:
+
+```kusto
+traces
+| where timestamp >= ago(90d)
+| extend payload = parse_json(message)
+| where payload.eventName == "CAPResponseForm.SubmissionAccepted"
+| summarize Submissions = count()
+    by SquadronCode = tostring(payload.squadronCode),
+       SquadronName = tostring(payload.squadronName)
+| order by Submissions desc, SquadronCode asc
+```
+
+For a month-by-month commander's call trend:
+
+```kusto
+traces
+| where timestamp >= startofmonth(ago(180d))
+| extend payload = parse_json(message)
+| where payload.eventName == "CAPResponseForm.SubmissionAccepted"
+| summarize Submissions = count()
+    by Month = startofmonth(timestamp),
+       SquadronCode = tostring(payload.squadronCode),
+       SquadronName = tostring(payload.squadronName)
+| order by Month asc, SquadronCode asc
+```
+
 ## Mail.Send Scoping
 
 Microsoft Graph `Mail.Send` application permission is tenant-wide by default: without additional Exchange Online controls, an app with this permission may be able to send as any mailbox in the tenant.

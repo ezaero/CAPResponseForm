@@ -20,7 +20,14 @@ const validBody = {
 function context() {
   const ctx = {
     errors: [],
+    logs: [],
     log: {
+      info(...args) {
+        ctx.logs.push(args);
+      },
+      warn(...args) {
+        ctx.logs.push(args);
+      },
       error(...args) {
         ctx.errors.push(args);
       }
@@ -137,6 +144,7 @@ test('returns friendly error with status 503 when Turnstile verification throws 
 
 test('sends valid submissions and returns confirmation details', async () => {
   let sentSubmission;
+  const ctx = context();
   const handler = createHandler({
     verifyTurnstile: async () => true,
     sendSubmissionMail: async (submission) => {
@@ -144,7 +152,7 @@ test('sends valid submissions and returns confirmation details', async () => {
     }
   });
 
-  const response = await handler(context(), request());
+  const response = await handler(ctx, request());
 
   assert.equal(sentSubmission.firstName, 'Amelia');
   assert.equal(sentSubmission.squadron.code, 'CO-022');
@@ -156,6 +164,60 @@ test('sends valid submissions and returns confirmation details', async () => {
     squadronName: 'Vance Brand Cadet Squadron',
     squadronCode: 'CO-022'
   });
+});
+
+test('logs accepted submission telemetry without applicant PII', async () => {
+  const ctx = context();
+  const handler = createHandler({
+    verifyTurnstile: async () => true,
+    sendSubmissionMail: async () => {}
+  });
+
+  const response = await handler(ctx, request());
+  const telemetry = ctx.logs
+    .flat()
+    .map((entry) => {
+      try {
+        return JSON.parse(entry);
+      } catch {
+        return null;
+      }
+    })
+    .find((entry) => entry?.eventName === 'CAPResponseForm.SubmissionAccepted');
+
+  assert.equal(response.status, 200);
+  assert.deepEqual(telemetry, {
+    eventName: 'CAPResponseForm.SubmissionAccepted',
+    squadronCode: 'CO-022',
+    squadronName: 'Vance Brand Cadet Squadron',
+    squadronCity: 'Longmont',
+    membershipType: 'Adult',
+    isCadet: false,
+    emailCopyEnabled: false,
+    emailOverrideEnabled: false
+  });
+
+  const serialized = JSON.stringify(telemetry);
+  assert.doesNotMatch(serialized, /Amelia/);
+  assert.doesNotMatch(serialized, /Earhart/);
+  assert.doesNotMatch(serialized, /amelia@example\.com/);
+  assert.doesNotMatch(serialized, /555-123-4567/);
+  assert.doesNotMatch(serialized, /Interested in visiting/);
+});
+
+test('does not log accepted submission telemetry when mail sending fails', async () => {
+  const ctx = context();
+  const handler = createHandler({
+    verifyTurnstile: async () => true,
+    sendSubmissionMail: async () => {
+      throw new Error('send failed');
+    }
+  });
+
+  const response = await handler(ctx, request());
+
+  assert.equal(response.status, 502);
+  assert.equal(ctx.logs.length, 0);
 });
 
 test('copies email recipient while preserving squadron recruiting group when copy is enabled', async () => {

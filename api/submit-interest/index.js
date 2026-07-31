@@ -21,6 +21,30 @@ function logError(context, ...args) {
   }
 }
 
+function logInfo(context, ...args) {
+  if (typeof context?.log?.info === 'function') {
+    context.log.info(...args);
+    return;
+  }
+
+  if (typeof context?.log === 'function') {
+    context.log(...args);
+  }
+}
+
+function logAcceptedSubmission(context, submission) {
+  logInfo(context, JSON.stringify({
+    eventName: 'CAPResponseForm.SubmissionAccepted',
+    squadronCode: submission.squadron.code,
+    squadronName: submission.squadron.squadronName,
+    squadronCity: submission.squadron.city,
+    membershipType: submission.membershipType,
+    isCadet: submission.membershipType === 'Cadet',
+    emailCopyEnabled: Boolean(submission.emailCopyEnabled),
+    emailOverrideEnabled: Boolean(submission.emailOverrideEnabled)
+  }));
+}
+
 function createHandler(dependencies = {}) {
   const verify = dependencies.verifyTurnstile || verifyTurnstile;
   const sendMail = dependencies.sendSubmissionMail || sendSubmissionMail;
@@ -64,6 +88,8 @@ function createHandler(dependencies = {}) {
       logError(context, 'Graph sendMail error', error);
       return json(502, { message: 'We could not send your request. Please try again or contact the squadron directly.' });
     }
+
+    logAcceptedSubmission(context, submission);
 
     return json(200, {
       message: 'Your interest form was submitted.',
