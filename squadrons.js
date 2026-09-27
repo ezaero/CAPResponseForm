@@ -17,6 +17,7 @@ window.CAP_SQUADRONS = [
   { code: 'CO-080', squadronName: 'Pikes Peak Composite Squadron', city: 'Peterson Space Force Base', charterNumber: 'RMR-CO-080', groupName: 'Group 3 - Southern Colorado' },
   { code: 'CO-159', squadronName: 'Air Academy Cadet Squadron', city: 'USAF Academy', charterNumber: 'RMR-CO-159', groupName: 'Group 3 - Southern Colorado' },
   { code: 'CO-807', squadronName: 'Merit Academy Cadet Squadron', city: 'Woodland Park', charterNumber: 'RMR-CO-807', groupName: 'Group 3 - Southern Colorado' },
+  { code: 'CO-200', squadronName: 'The Fireborn Cadet Squadron', city: 'Aurora', charterNumber: 'RMR-CO-200', groupName: 'Group 4 - Central Colorado' },
   { code: 'CO-143', squadronName: 'Mile High Cadet Squadron', city: 'Buckley SFB', charterNumber: 'RMR-CO-143', groupName: 'Group 4 - Central Colorado' },
   { code: 'CO-157', squadronName: 'Castle Rock Cadet Squadron', city: 'Castle Rock', charterNumber: 'RMR-CO-157', groupName: 'Group 4 - Central Colorado' },
   { code: 'CO-148', squadronName: 'Mustang Cadet Squadron', city: 'Centennial', charterNumber: 'RMR-CO-148', groupName: 'Group 4 - Central Colorado' },
